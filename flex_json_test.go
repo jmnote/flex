@@ -15,24 +15,24 @@ func TestJSONString(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	got = FmtToStringDetail(f.Get(".spec"))
+	got = FmtStringSharp(f.Get(".spec"))
 	want = `map[string]interface {}{"containers":[]interface {}{map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}}`
 	assert.Equal(t, want, got, "not equal")
 
-	got = FmtToStringDetail(f.Get(".spec.containers"))
+	got = FmtStringSharp(f.Get(".spec.containers"))
 	want = `[]interface {}{map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}`
 	assert.Equal(t, want, got, "not equal")
 
-	got = FmtToStringDetail(f.Get(".spec.containers[0]"))
+	got = FmtStringSharp(f.Get(".spec.containers[0]"))
 	want = `map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}`
 	assert.Equal(t, want, got, "not equal")
 
-	got = FmtToStringDetail(f.Get(".spec.containers[0].env"))
+	got = FmtStringSharp(f.Get(".spec.containers[0].env"))
 	want = `[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}`
 	assert.Equal(t, want, got, "not equal")
 
 	want = `"DEMO_FAREWELL"`
-	got = FmtToStringDetail(f.Get(".spec.containers[0].env[1].name"))
+	got = FmtStringSharp(f.Get(".spec.containers[0].env[1].name"))
 	assert.Equal(t, want, got, "not equal")
 }
 
@@ -45,23 +45,23 @@ func TestJSONFile(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	got = FmtToStringDetail(f.Get(".spec"))
+	got = FmtStringSharp(f.Get(".spec"))
 	want = `map[string]interface {}{"containers":[]interface {}{map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}}`
 	assert.Equal(t, want, got, "not equal")
 
-	got = FmtToStringDetail(f.Get(".spec.containers"))
+	got = FmtStringSharp(f.Get(".spec.containers"))
 	want = `[]interface {}{map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}`
 	assert.Equal(t, want, got, "not equal")
 
-	got = FmtToStringDetail(f.Get(".spec.containers[0]"))
+	got = FmtStringSharp(f.Get(".spec.containers[0]"))
 	want = `map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}`
 	assert.Equal(t, want, got, "not equal")
 
-	got = FmtToStringDetail(f.Get(".spec.containers[0].env"))
+	got = FmtStringSharp(f.Get(".spec.containers[0].env"))
 	want = `[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}`
 	assert.Equal(t, want, got, "not equal")
 
 	want = `"DEMO_FAREWELL"`
-	got = FmtToStringDetail(f.Get(".spec.containers[0].env[1].name"))
+	got = FmtStringSharp(f.Get(".spec.containers[0].env[1].name"))
 	assert.Equal(t, want, got, "not equal")
 }

@@ -65,85 +65,43 @@ func NewFromYAMLBytes(rawBytes []byte) (*Flex, error) {
 // get value
 
 func (f *Flex) Get(key string) interface{} {
-	return f.GetFlex(key).Object()
+	return f.GetFlex(key).object
 }
 
 func (f *Flex) GetBool(key string) bool {
-	return f.GetFlex(key).Bool()
+	return cast.ToBool(f.GetFlex(key).object)
 }
 
 func (f *Flex) GetFloat64(key string) float64 {
-	return f.GetFlex(key).Float64()
+	return cast.ToFloat64(f.GetFlex(key).object)
 }
 
 func (f *Flex) GetInt(key string) int {
-	return f.GetFlex(key).Int()
+	return cast.ToInt(f.GetFlex(key).object)
 }
 
 func (f *Flex) GetIntSlice(key string) []int {
-	return f.GetFlex(key).IntSlice()
+	return cast.ToIntSlice(f.GetFlex(key).object)
 }
 
 func (f *Flex) GetSlice(key string) []interface{} {
-	return f.GetFlex(key).Slice()
+	return cast.ToSlice(f.GetFlex(key).object)
 }
 
 func (f *Flex) GetString(key string) string {
-	return f.GetFlex(key).String()
+	return cast.ToString(f.GetFlex(key).object)
 }
 
 func (f *Flex) GetStringMap(key string) map[string]interface{} {
-	return f.GetFlex(key).StringMap()
+	return cast.ToStringMap(f.GetFlex(key).object)
 }
 
 func (f *Flex) GetStringMapString(key string) map[string]string {
-	return f.GetFlex(key).StringMapString()
+	return cast.ToStringMapString(f.GetFlex(key).object)
 }
 
 func (f *Flex) GetStringSlice(key string) []string {
-	return f.GetFlex(key).StringSlice()
-}
-
-// casting to value
-
-func (f *Flex) Object() interface{} {
-	return f.object
-}
-
-func (f *Flex) Bool() bool {
-	return cast.ToBool(f.object)
-}
-
-func (f *Flex) Float64() float64 {
-	return cast.ToFloat64(f.object)
-}
-
-func (f *Flex) Int() int {
-	return cast.ToInt(f.object)
-}
-
-func (f *Flex) IntSlice() []int {
-	return cast.ToIntSlice(f.object)
-}
-
-func (f *Flex) Slice() []interface{} {
-	return cast.ToSlice(f.object)
-}
-
-func (f *Flex) String() string {
-	return cast.ToString(f.object)
-}
-
-func (f *Flex) StringMap() map[string]interface{} {
-	return cast.ToStringMap(f.object)
-}
-
-func (f *Flex) StringMapString() map[string]string {
-	return cast.ToStringMapString(f.object)
-}
-
-func (f *Flex) StringSlice() []string {
-	return cast.ToStringSlice(f.object)
+	return cast.ToStringSlice(f.GetFlex(key).object)
 }
 
 // get flex
@@ -168,12 +126,6 @@ func (f *Flex) GetFlex(key string) *Flex {
 	return nil
 }
 
-// formatting to string
-
-func FmtToString(object interface{}) string {
-	return fmt.Sprintf("%v", object)
-}
-
-func FmtToStringDetail(object interface{}) string {
-	return fmt.Sprintf("%#v", object)
+func (f *Flex) String() string {
+	return "Flex{" + fmt.Sprintf("%v", f.object) + "}"
 }

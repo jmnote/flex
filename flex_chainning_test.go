@@ -26,16 +26,16 @@ spec:
 	var want string
 	var got string
 
-	got = FmtToStringDetail(f.Get(".spec.containers"))
+	got = FmtStringSharp(f.Get(".spec.containers"))
 	want = `[]interface {}{map[string]interface {}{"image":"busybox:1.28", "name":"count"}, map[string]interface {}{"image":"busybox:1.28", "name":"count-log-1"}, map[string]interface {}{"image":"busybox:1.28", "name":"count-log-2"}}`
 	assert.Equal(t, want, got, "not equal")
 
-	got = FmtToStringDetail(f.GetFlex(".spec").Get(".containers"))
+	got = FmtStringSharp(f.GetFlex(".spec").Get(".containers"))
 	want = `[]interface {}{map[string]interface {}{"image":"busybox:1.28", "name":"count"}, map[string]interface {}{"image":"busybox:1.28", "name":"count-log-1"}, map[string]interface {}{"image":"busybox:1.28", "name":"count-log-2"}}`
 	assert.Equal(t, want, got, "not equal")
 
-	got = FmtToStringDetail(f.Get(".spec.containers[1]"))
-	want = FmtToStringDetail(f.GetFlex(".spec").GetFlex(".containers").Get("[1]"))
+	got = FmtStringSharp(f.Get(".spec.containers[1]"))
+	want = FmtStringSharp(f.GetFlex(".spec").GetFlex(".containers").Get("[1]"))
 	assert.Equal(t, want, got, "not equal")
 
 	got = f.GetFlex(".spec").GetFlex(".containers").GetString("[1].image")
