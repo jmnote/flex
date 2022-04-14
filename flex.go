@@ -2,6 +2,7 @@ package flex
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"regexp"
 
@@ -10,8 +11,15 @@ import (
 )
 
 type Flex struct {
-	rawString string
-	data      interface{}
+	object interface{}
+}
+
+// creation
+
+func NewFromObject(object interface{}) *Flex {
+	f := new(Flex)
+	f.object = object
+	return f
 }
 
 func NewFromJSONString(rawString string) (*Flex, error) {
@@ -28,9 +36,7 @@ func NewFromJSONFile(filepath string) (*Flex, error) {
 
 func NewFromJSONBytes(rawBytes []byte) (*Flex, error) {
 	f := new(Flex)
-	f.rawString = string(rawBytes)
-
-	if err := json.Unmarshal(rawBytes, &f.data); err != nil {
+	if err := json.Unmarshal(rawBytes, &f.object); err != nil {
 		return nil, err
 	}
 	return f, nil
@@ -50,70 +56,124 @@ func NewFromYAMLFile(filepath string) (*Flex, error) {
 
 func NewFromYAMLBytes(rawBytes []byte) (*Flex, error) {
 	f := new(Flex)
-	f.rawString = string(rawBytes)
-
-	if err := yaml.Unmarshal(rawBytes, &f.data); err != nil {
+	if err := yaml.Unmarshal(rawBytes, &f.object); err != nil {
 		return nil, err
 	}
 	return f, nil
 }
 
+// get value
+
+func (f *Flex) Get(key string) interface{} {
+	return f.GetFlex(key).Object()
+}
+
 func (f *Flex) GetBool(key string) bool {
-	return cast.ToBool(f.Get(key))
+	return f.GetFlex(key).Bool()
 }
 
 func (f *Flex) GetFloat64(key string) float64 {
-	return cast.ToFloat64(f.Get(key))
+	return f.GetFlex(key).Float64()
 }
 
 func (f *Flex) GetInt(key string) int {
-	return cast.ToInt(f.Get(key))
+	return f.GetFlex(key).Int()
 }
 
 func (f *Flex) GetIntSlice(key string) []int {
-	return cast.ToIntSlice(f.Get(key))
+	return f.GetFlex(key).IntSlice()
+}
+
+func (f *Flex) GetSlice(key string) []interface{} {
+	return f.GetFlex(key).Slice()
 }
 
 func (f *Flex) GetString(key string) string {
-	return cast.ToString(f.Get(key))
+	return f.GetFlex(key).String()
 }
 
 func (f *Flex) GetStringMap(key string) map[string]interface{} {
-	return cast.ToStringMap(f.Get(key))
+	return f.GetFlex(key).StringMap()
 }
 
 func (f *Flex) GetStringMapString(key string) map[string]string {
-	return cast.ToStringMapString(f.Get(key))
+	return f.GetFlex(key).StringMapString()
 }
 
 func (f *Flex) GetStringSlice(key string) []string {
-	return cast.ToStringSlice(f.Get(key))
+	return f.GetFlex(key).StringSlice()
 }
 
-func (f *Flex) Get(key string) interface{} {
-	return getDeep(key, f.data)
+// casting to value
+
+func (f *Flex) Object() interface{} {
+	return f.object
 }
 
-func getDeep(key string, object interface{}) interface{} {
+func (f *Flex) Bool() bool {
+	return cast.ToBool(f.object)
+}
+
+func (f *Flex) Float64() float64 {
+	return cast.ToFloat64(f.object)
+}
+
+func (f *Flex) Int() int {
+	return cast.ToInt(f.object)
+}
+
+func (f *Flex) IntSlice() []int {
+	return cast.ToIntSlice(f.object)
+}
+
+func (f *Flex) Slice() []interface{} {
+	return cast.ToSlice(f.object)
+}
+
+func (f *Flex) String() string {
+	return cast.ToString(f.object)
+}
+
+func (f *Flex) StringMap() map[string]interface{} {
+	return cast.ToStringMap(f.object)
+}
+
+func (f *Flex) StringMapString() map[string]string {
+	return cast.ToStringMapString(f.object)
+}
+
+func (f *Flex) StringSlice() []string {
+	return cast.ToStringSlice(f.object)
+}
+
+// get flex
+
+func (f *Flex) GetFlex(key string) *Flex {
 	if key == "" || key == "." {
-		return object
+		return f
 	}
+	val := new(Flex)
 	r, _ := regexp.Compile(`^\.[a-zA-Z0-9\-]+`)
 	key1 := r.FindString(key)
 	if key1 != "" {
-		realKey1 := key1[1:]
-		newKey := key[len(key1):]
-		newObject := cast.ToStringMap(object)[realKey1]
-		return getDeep(newKey, newObject)
+		val.object = cast.ToStringMap(f.object)[key1[1:]]
+		return val.GetFlex(key[len(key1):])
 	}
-
 	r, _ = regexp.Compile(`^\[[0-9]+\]`)
 	key1 = r.FindString(key)
 	if key1 != "" {
-		realKey1 := cast.ToInt(key1[1 : len(key1)-1])
-		newKey := key[len(key1):]
-		newObject := cast.ToSlice(object)[realKey1]
-		return getDeep(newKey, newObject)
+		val.object = cast.ToSlice(f.object)[cast.ToInt(key1[1:len(key1)-1])]
+		return val.GetFlex(key[len(key1):])
 	}
 	return nil
+}
+
+// formatting to string
+
+func FmtToString(object interface{}) string {
+	return fmt.Sprintf("%v", object)
+}
+
+func FmtToStringDetail(object interface{}) string {
+	return fmt.Sprintf("%#v", object)
 }
