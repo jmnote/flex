@@ -3,7 +3,7 @@
 flexible object in golang
 * read from yaml, json
 * access values by string key
-* inspired by viper
+* chaining
 
 ## Creating a Flex
 
