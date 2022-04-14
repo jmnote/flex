@@ -1,8 +1,8 @@
 # flex
 
 flexible object in golang
-* read from yaml, json
-* access values by string key
+* reading from yaml(string, file, bytes), json(string, file, bytes)
+* accessing values by string key
 * chaining
 
 ## Creating a Flex
