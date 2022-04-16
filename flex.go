@@ -1,6 +1,7 @@
 package flex
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -102,6 +103,19 @@ func (f *Flex) GetStringMapString(key string) map[string]string {
 
 func (f *Flex) GetStringSlice(key string) []string {
 	return cast.ToStringSlice(f.GetFlex(key).object)
+}
+
+func (f *Flex) GetJSON(key string) string {
+	val, _ := json.Marshal(f.GetFlex(key).object)
+	return string(val)
+}
+
+func (f *Flex) GetYAML(key string) string {
+	var b bytes.Buffer
+	encoder := yaml.NewEncoder(&b)
+	encoder.SetIndent(2)
+	encoder.Encode(f.GetFlex(key).object)
+	return b.String()
 }
 
 // get flex

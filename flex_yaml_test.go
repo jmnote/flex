@@ -115,3 +115,56 @@ string-slice:
 	assert.Equal(t, map[string]string{"a": "hello", "b": "world"}, f.GetStringMapString(".string-map-string"), "not equal")
 	assert.Equal(t, []string{"a", "b", "c"}, f.GetStringSlice(".string-slice"), "not equal")
 }
+
+func TestYAMLToYAML(t *testing.T) {
+	var want string
+	var got string
+
+	f, err := NewFromYAMLFile("sample.yaml")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	got = f.GetYAML(".")
+	want = `kind: TestCase
+spec:
+  containers:
+    - env:
+        - name: DEMO_GREETING
+          value: Hello from the environment
+        - name: DEMO_FAREWELL
+          value: Such a sweet sorrow
+      image: gcr.io/google-samples/node-hello:1.0
+      name: envar-demo-container
+`
+	assert.Equal(t, want, got, "not equal")
+
+	got = f.GetYAML(".spec.containers")
+	want = `- env:
+    - name: DEMO_GREETING
+      value: Hello from the environment
+    - name: DEMO_FAREWELL
+      value: Such a sweet sorrow
+  image: gcr.io/google-samples/node-hello:1.0
+  name: envar-demo-container
+`
+	assert.Equal(t, want, got, "not equal")
+}
+
+func TestYAMLToJSON(t *testing.T) {
+	var want string
+	var got string
+
+	f, err := NewFromYAMLFile("sample.yaml")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	got = f.GetJSON(".")
+	want = `{"kind":"TestCase","spec":{"containers":[{"env":[{"name":"DEMO_GREETING","value":"Hello from the environment"},{"name":"DEMO_FAREWELL","value":"Such a sweet sorrow"}],"image":"gcr.io/google-samples/node-hello:1.0","name":"envar-demo-container"}]}}`
+	assert.Equal(t, want, got, "not equal")
+
+	got = f.GetJSON(".spec.containers")
+	want = `[{"env":[{"name":"DEMO_GREETING","value":"Hello from the environment"},{"name":"DEMO_FAREWELL","value":"Such a sweet sorrow"}],"image":"gcr.io/google-samples/node-hello:1.0","name":"envar-demo-container"}]`
+	assert.Equal(t, want, got, "not equal")
+}
