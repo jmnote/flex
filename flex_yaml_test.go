@@ -6,8 +6,8 @@ import (
 )
 
 func TestYAMLString(t *testing.T) {
-	var want string
 	var got string
+	var want string
 
 	yamlString := `
 kind: TestCase
@@ -27,24 +27,34 @@ spec:
 	}
 
 	got = FmtStringSharp(f.Get(".spec"))
-	want = `map[string]interface {}{"containers":[]interface {}{map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}}`
-	assert.Equal(t, want, got, "not equal")
+	want = `&flex.Flex{object:map[string]interface {}{"containers":[]interface {}{map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}}}`
+	if want != got {
+		t.Fatal("\nwant =>", want, "\ngot  =>", got)
+	}
 
 	got = FmtStringSharp(f.Get(".spec.containers"))
-	want = `[]interface {}{map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}`
-	assert.Equal(t, want, got, "not equal")
+	want = `&flex.Flex{object:[]interface {}{map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}}`
+	if want != got {
+		t.Fatal("\nwant =>", want, "\ngot  =>", got)
+	}
 
 	got = FmtStringSharp(f.Get(".spec.containers[0]"))
-	want = `map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}`
-	assert.Equal(t, want, got, "not equal")
+	want = `&flex.Flex{object:map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}`
+	if want != got {
+		t.Fatal("\nwant =>", want, "\ngot  =>", got)
+	}
 
 	got = FmtStringSharp(f.Get(".spec.containers[0].env"))
-	want = `[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}`
-	assert.Equal(t, want, got, "not equal")
+	want = `&flex.Flex{object:[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}}`
+	if want != got {
+		t.Fatal("\nwant =>", want, "\ngot  =>", got)
+	}
 
-	want = `"DEMO_FAREWELL"`
 	got = FmtStringSharp(f.Get(".spec.containers[0].env[1].name"))
-	assert.Equal(t, want, got, "not equal")
+	want = `&flex.Flex{object:"DEMO_FAREWELL"}`
+	if want != got {
+		t.Fatal("\nwant =>", want, "\ngot  =>", got)
+	}
 }
 
 func TestYAMLFile(t *testing.T) {
@@ -57,24 +67,34 @@ func TestYAMLFile(t *testing.T) {
 	}
 
 	got = FmtStringSharp(f.Get(".spec"))
-	want = `map[string]interface {}{"containers":[]interface {}{map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}}`
-	assert.Equal(t, want, got, "not equal")
+	want = `&flex.Flex{object:map[string]interface {}{"containers":[]interface {}{map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}}}`
+	if want != got {
+		t.Fatal("\nwant =>", want, "\ngot  =>", got)
+	}
 
 	got = FmtStringSharp(f.Get(".spec.containers"))
-	want = `[]interface {}{map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}`
-	assert.Equal(t, want, got, "not equal")
+	want = `&flex.Flex{object:[]interface {}{map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}}`
+	if want != got {
+		t.Fatal("\nwant =>", want, "\ngot  =>", got)
+	}
 
 	got = FmtStringSharp(f.Get(".spec.containers[0]"))
-	want = `map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}`
-	assert.Equal(t, want, got, "not equal")
+	want = `&flex.Flex{object:map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}`
+	if want != got {
+		t.Fatal("\nwant =>", want, "\ngot  =>", got)
+	}
 
 	got = FmtStringSharp(f.Get(".spec.containers[0].env"))
-	want = `[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}`
-	assert.Equal(t, want, got, "not equal")
+	want = `&flex.Flex{object:[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}}`
+	if want != got {
+		t.Fatal("\nwant =>", want, "\ngot  =>", got)
+	}
 
-	want = `"DEMO_FAREWELL"`
+	want = `&flex.Flex{object:"DEMO_FAREWELL"}`
 	got = FmtStringSharp(f.Get(".spec.containers[0].env[1].name"))
-	assert.Equal(t, want, got, "not equal")
+	if want != got {
+		t.Fatal("\nwant =>", want, "\ngot  =>", got)
+	}
 }
 
 func TestYAMLStringTypes(t *testing.T) {
@@ -89,10 +109,10 @@ int-slice:
 - 3
 - 4
 string: hello
-string-map:
+object-map:
   a: hello
   b: 42
-string-map-string:
+string-map:
   a: hello
   b: world
 string-slice:
@@ -105,15 +125,15 @@ string-slice:
 		t.Fatal(err)
 	}
 
-	assert.Equal(t, nil, f.Get(".nil"), "not equal")
-	assert.Equal(t, true, f.GetBool(".bool"), "not equal")
-	assert.Equal(t, 3.14, f.GetFloat64(".float64"), "not equal")
-	assert.Equal(t, 42, f.GetInt(".int"), "not equal")
-	assert.Equal(t, []int{1, 2, 3, 4}, f.GetIntSlice(".int-slice"), "not equal")
-	assert.Equal(t, "hello", f.GetString(".string"), "not equal")
-	assert.Equal(t, map[string]interface{}{"a": "hello", "b": 42}, f.GetStringMap(".string-map"), "not equal")
-	assert.Equal(t, map[string]string{"a": "hello", "b": "world"}, f.GetStringMapString(".string-map-string"), "not equal")
-	assert.Equal(t, []string{"a", "b", "c"}, f.GetStringSlice(".string-slice"), "not equal")
+	assert.Equal(t, nil, f.GetObject(".nil"), "")
+	assert.Equal(t, true, f.GetBool(".bool"), "")
+	assert.Equal(t, 3.14, f.GetFloat64(".float64"), "")
+	assert.Equal(t, 42, f.GetInt(".int"), "")
+	assert.Equal(t, []int{1, 2, 3, 4}, f.GetIntSlice(".int-slice"), "")
+	assert.Equal(t, "hello", f.GetString(".string"), "")
+	assert.Equal(t, map[string]interface{}{"a": "hello", "b": 42}, f.GetObjectMap(".object-map"), "")
+	assert.Equal(t, map[string]string{"a": "hello", "b": "world"}, f.GetStringMap(".string-map"), "")
+	assert.Equal(t, []string{"a", "b", "c"}, f.GetStringSlice(".string-slice"), "")
 }
 
 func TestYAMLToYAML(t *testing.T) {
@@ -125,7 +145,7 @@ func TestYAMLToYAML(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	got = f.GetYAML(".")
+	got = f.GetYAML("")
 	want = `kind: TestCase
 spec:
   containers:
@@ -137,7 +157,7 @@ spec:
       image: gcr.io/google-samples/node-hello:1.0
       name: envar-demo-container
 `
-	assert.Equal(t, want, got, "not equal")
+	assert.Equal(t, want, got, "")
 
 	got = f.GetYAML(".spec.containers")
 	want = `- env:
@@ -148,7 +168,7 @@ spec:
   image: gcr.io/google-samples/node-hello:1.0
   name: envar-demo-container
 `
-	assert.Equal(t, want, got, "not equal")
+	assert.Equal(t, want, got, "")
 }
 
 func TestYAMLToJSON(t *testing.T) {
@@ -160,11 +180,15 @@ func TestYAMLToJSON(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	got = f.GetJSON(".")
+	got = f.GetJSON("")
 	want = `{"kind":"TestCase","spec":{"containers":[{"env":[{"name":"DEMO_GREETING","value":"Hello from the environment"},{"name":"DEMO_FAREWELL","value":"Such a sweet sorrow"}],"image":"gcr.io/google-samples/node-hello:1.0","name":"envar-demo-container"}]}}`
-	assert.Equal(t, want, got, "not equal")
+	if want != got {
+		t.Fatal("\nwant =>", want, "\ngot  =>", got)
+	}
 
 	got = f.GetJSON(".spec.containers")
 	want = `[{"env":[{"name":"DEMO_GREETING","value":"Hello from the environment"},{"name":"DEMO_FAREWELL","value":"Such a sweet sorrow"}],"image":"gcr.io/google-samples/node-hello:1.0","name":"envar-demo-container"}]`
-	assert.Equal(t, want, got, "not equal")
+	if want != got {
+		t.Fatal("\nwant =>", want, "\ngot  =>", got)
+	}
 }

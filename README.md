@@ -22,12 +22,21 @@ The following functions exist:
 In Flex, there are a few ways to get a value depending on the value’s type.
 The following methods exist:
 
-* `Get(key string) : interface{}`
+* `Get(key string) : *Flex`
 * `GetBool(key string) : bool`
 * `GetFloat64(key string) : float64`
 * `GetInt(key string) : int`
 * `GetIntSlice(key string) : []int`
+* `GetObject(key string) : interface{}`
+* `GetObjectMap(key string) : map[string]interface{}`
 * `GetString(key string) : string`
-* `GetStringMap(key string) : map[string]interface{}`
-* `GetStringMapString(key string) : map[string]string`
+* `GetStringMap(key string) : map[string]string`
 * `GetStringSlice(key string) : []string`
+
+## Setting Value
+
+* `Set(key string, interface{}) : *Flex`
+
+## MultiFlex
+
+* `MultiFlex(flexes ...*Flex) : *Flex`

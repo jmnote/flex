@@ -16,6 +16,10 @@ type Flex struct {
 }
 
 // creation
+// func NewSlice() *Flex {
+// 	var slice []interface{}
+// 	return NewFromObject(slice)
+// }
 
 func NewFromObject(object interface{}) *Flex {
 	f := new(Flex)
@@ -63,50 +67,106 @@ func NewFromYAMLBytes(rawBytes []byte) (*Flex, error) {
 	return f, nil
 }
 
-// get value
+// slice methods
+func MultiFlex(flexes ...*Flex) *Flex {
+	var slice []interface{}
+	for _, f := range flexes {
+		slice = append(slice, f.object)
+	}
+	return NewFromObject(slice)
+}
 
-func (f *Flex) Get(key string) interface{} {
-	return f.GetFlex(key).object
+// get methods
+func (f *Flex) Get(key string) *Flex {
+	if key == "" || key == "." {
+		return f
+	}
+	val := new(Flex)
+	r, _ := regexp.Compile(`^\.[a-zA-Z0-9\-_]+`)
+	key1 := r.FindString(key)
+	if key1 != "" {
+		val.object = cast.ToStringMap(f.object)[key1[1:]]
+		return val.Get(key[len(key1):])
+	}
+	r, _ = regexp.Compile(`^\[[0-9]+\]`)
+	key1 = r.FindString(key)
+	if key1 != "" {
+		val.object = cast.ToSlice(f.object)[cast.ToInt(key1[1:len(key1)-1])]
+		return val.Get(key[len(key1):])
+	}
+	return nil
+}
+
+func (f *Flex) Set(key string, object interface{}) *Flex {
+	if key == "" || key == "." {
+		f.object = object
+		return f
+	}
+	r, _ := regexp.Compile(`^\.[a-zA-Z0-9\-_]+`)
+	key1 := r.FindString(key)
+	if key1 != "" {
+		val := f.Get(key1)
+		val.Set(key[len(key1):], object)
+		m := cast.ToStringMap(f.object)
+		m[key1[1:]] = val.object
+		f.object = m
+		return f
+	}
+	r, _ = regexp.Compile(`^\[[0-9]+\]`)
+	key1 = r.FindString(key)
+	if key1 != "" {
+		val := f.Get(key1)
+		val.Set(key[len(key1):], object)
+		s := cast.ToSlice(f.object)
+		s[cast.ToInt(key1[1:len(key1)-1])] = val.object
+		f.object = s
+		return f
+	}
+	return f
 }
 
 func (f *Flex) GetBool(key string) bool {
-	return cast.ToBool(f.GetFlex(key).object)
+	return cast.ToBool(f.Get(key).object)
 }
 
 func (f *Flex) GetFloat64(key string) float64 {
-	return cast.ToFloat64(f.GetFlex(key).object)
+	return cast.ToFloat64(f.Get(key).object)
 }
 
 func (f *Flex) GetInt(key string) int {
-	return cast.ToInt(f.GetFlex(key).object)
+	return cast.ToInt(f.Get(key).object)
 }
 
 func (f *Flex) GetIntSlice(key string) []int {
-	return cast.ToIntSlice(f.GetFlex(key).object)
+	return cast.ToIntSlice(f.Get(key).object)
+}
+
+func (f *Flex) GetObject(key string) interface{} {
+	return f.Get(key).object
 }
 
 func (f *Flex) GetSlice(key string) []interface{} {
-	return cast.ToSlice(f.GetFlex(key).object)
+	return cast.ToSlice(f.Get(key).object)
+}
+
+func (f *Flex) GetObjectMap(key string) map[string]interface{} {
+	return cast.ToStringMap(f.Get(key).object)
 }
 
 func (f *Flex) GetString(key string) string {
-	return cast.ToString(f.GetFlex(key).object)
+	return cast.ToString(f.Get(key).object)
 }
 
-func (f *Flex) GetStringMap(key string) map[string]interface{} {
-	return cast.ToStringMap(f.GetFlex(key).object)
-}
-
-func (f *Flex) GetStringMapString(key string) map[string]string {
-	return cast.ToStringMapString(f.GetFlex(key).object)
+func (f *Flex) GetStringMap(key string) map[string]string {
+	return cast.ToStringMapString(f.Get(key).object)
 }
 
 func (f *Flex) GetStringSlice(key string) []string {
-	return cast.ToStringSlice(f.GetFlex(key).object)
+	return cast.ToStringSlice(f.Get(key).object)
 }
 
 func (f *Flex) GetJSON(key string) string {
-	val, _ := json.Marshal(f.GetFlex(key).object)
+	val, _ := json.Marshal(f.Get(key).object)
 	return string(val)
 }
 
@@ -114,30 +174,8 @@ func (f *Flex) GetYAML(key string) string {
 	var b bytes.Buffer
 	encoder := yaml.NewEncoder(&b)
 	encoder.SetIndent(2)
-	encoder.Encode(f.GetFlex(key).object)
+	encoder.Encode(f.Get(key).object)
 	return b.String()
-}
-
-// get flex
-
-func (f *Flex) GetFlex(key string) *Flex {
-	if key == "" || key == "." {
-		return f
-	}
-	val := new(Flex)
-	r, _ := regexp.Compile(`^\.[a-zA-Z0-9\-]+`)
-	key1 := r.FindString(key)
-	if key1 != "" {
-		val.object = cast.ToStringMap(f.object)[key1[1:]]
-		return val.GetFlex(key[len(key1):])
-	}
-	r, _ = regexp.Compile(`^\[[0-9]+\]`)
-	key1 = r.FindString(key)
-	if key1 != "" {
-		val.object = cast.ToSlice(f.object)[cast.ToInt(key1[1:len(key1)-1])]
-		return val.GetFlex(key[len(key1):])
-	}
-	return nil
 }
 
 func (f *Flex) String() string {
