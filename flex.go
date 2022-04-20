@@ -16,10 +16,6 @@ type Flex struct {
 }
 
 // creation
-// func NewSlice() *Flex {
-// 	var slice []interface{}
-// 	return NewFromObject(slice)
-// }
 
 func NewFromObject(object interface{}) *Flex {
 	f := new(Flex)
