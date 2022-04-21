@@ -1,6 +1,7 @@
-package flex
+package test
 
 import (
+	"github.com/jmnote/flex"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -21,37 +22,37 @@ spec:
     - name: DEMO_FAREWELL
       value: "Such a sweet sorrow"
 `
-	f, err := NewFromYAMLString(yamlString)
+	f, err := flex.NewFromYAML(yamlString)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	got = FmtStringSharp(f.Get(".spec"))
-	want = `&flex.Flex{object:map[string]interface {}{"containers":[]interface {}{map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}}}`
+	got = f.Get(".spec").ToJSON()
+	want = `{"containers":[{"env":[{"name":"DEMO_GREETING","value":"Hello from the environment"},{"name":"DEMO_FAREWELL","value":"Such a sweet sorrow"}],"image":"gcr.io/google-samples/node-hello:1.0","name":"envar-demo-container"}]}`
 	if want != got {
 		t.Fatal("\nwant =>", want, "\ngot  =>", got)
 	}
 
-	got = FmtStringSharp(f.Get(".spec.containers"))
-	want = `&flex.Flex{object:[]interface {}{map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}}`
+	got = f.Get(".spec.containers").ToJSON()
+	want = `[{"env":[{"name":"DEMO_GREETING","value":"Hello from the environment"},{"name":"DEMO_FAREWELL","value":"Such a sweet sorrow"}],"image":"gcr.io/google-samples/node-hello:1.0","name":"envar-demo-container"}]`
 	if want != got {
 		t.Fatal("\nwant =>", want, "\ngot  =>", got)
 	}
 
-	got = FmtStringSharp(f.Get(".spec.containers[0]"))
-	want = `&flex.Flex{object:map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}`
+	got = f.Get(".spec.containers[0]").ToJSON()
+	want = `{"env":[{"name":"DEMO_GREETING","value":"Hello from the environment"},{"name":"DEMO_FAREWELL","value":"Such a sweet sorrow"}],"image":"gcr.io/google-samples/node-hello:1.0","name":"envar-demo-container"}`
 	if want != got {
 		t.Fatal("\nwant =>", want, "\ngot  =>", got)
 	}
 
-	got = FmtStringSharp(f.Get(".spec.containers[0].env"))
-	want = `&flex.Flex{object:[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}}`
+	got = f.Get(".spec.containers[0].env").ToJSON()
+	want = `[{"name":"DEMO_GREETING","value":"Hello from the environment"},{"name":"DEMO_FAREWELL","value":"Such a sweet sorrow"}]`
 	if want != got {
 		t.Fatal("\nwant =>", want, "\ngot  =>", got)
 	}
 
-	got = FmtStringSharp(f.Get(".spec.containers[0].env[1].name"))
-	want = `&flex.Flex{object:"DEMO_FAREWELL"}`
+	got = f.Get(".spec.containers[0].env[1].name").ToJSON()
+	want = `"DEMO_FAREWELL"`
 	if want != got {
 		t.Fatal("\nwant =>", want, "\ngot  =>", got)
 	}
@@ -61,37 +62,37 @@ func TestYAMLFile(t *testing.T) {
 	var want string
 	var got string
 
-	f, err := NewFromYAMLFile("sample.yaml")
+	f, err := flex.NewFromYAMLFile("sample.yaml")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	got = FmtStringSharp(f.Get(".spec"))
-	want = `&flex.Flex{object:map[string]interface {}{"containers":[]interface {}{map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}}}`
+	got = f.Get(".spec").ToJSON()
+	want = `{"containers":[{"env":[{"name":"DEMO_GREETING","value":"Hello from the environment"},{"name":"DEMO_FAREWELL","value":"Such a sweet sorrow"}],"image":"gcr.io/google-samples/node-hello:1.0","name":"envar-demo-container"}]}`
 	if want != got {
 		t.Fatal("\nwant =>", want, "\ngot  =>", got)
 	}
 
-	got = FmtStringSharp(f.Get(".spec.containers"))
-	want = `&flex.Flex{object:[]interface {}{map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}}`
+	got = f.Get(".spec.containers").ToJSON()
+	want = `[{"env":[{"name":"DEMO_GREETING","value":"Hello from the environment"},{"name":"DEMO_FAREWELL","value":"Such a sweet sorrow"}],"image":"gcr.io/google-samples/node-hello:1.0","name":"envar-demo-container"}]`
 	if want != got {
 		t.Fatal("\nwant =>", want, "\ngot  =>", got)
 	}
 
-	got = FmtStringSharp(f.Get(".spec.containers[0]"))
-	want = `&flex.Flex{object:map[string]interface {}{"env":[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}, "image":"gcr.io/google-samples/node-hello:1.0", "name":"envar-demo-container"}}`
+	got = f.Get(".spec.containers[0]").ToJSON()
+	want = `{"env":[{"name":"DEMO_GREETING","value":"Hello from the environment"},{"name":"DEMO_FAREWELL","value":"Such a sweet sorrow"}],"image":"gcr.io/google-samples/node-hello:1.0","name":"envar-demo-container"}`
 	if want != got {
 		t.Fatal("\nwant =>", want, "\ngot  =>", got)
 	}
 
-	got = FmtStringSharp(f.Get(".spec.containers[0].env"))
-	want = `&flex.Flex{object:[]interface {}{map[string]interface {}{"name":"DEMO_GREETING", "value":"Hello from the environment"}, map[string]interface {}{"name":"DEMO_FAREWELL", "value":"Such a sweet sorrow"}}}`
+	got = f.Get(".spec.containers[0].env").ToJSON()
+	want = `[{"name":"DEMO_GREETING","value":"Hello from the environment"},{"name":"DEMO_FAREWELL","value":"Such a sweet sorrow"}]`
 	if want != got {
 		t.Fatal("\nwant =>", want, "\ngot  =>", got)
 	}
 
-	want = `&flex.Flex{object:"DEMO_FAREWELL"}`
-	got = FmtStringSharp(f.Get(".spec.containers[0].env[1].name"))
+	got = f.Get(".spec.containers[0].env[1].name").ToJSON()
+	want = `"DEMO_FAREWELL"`
 	if want != got {
 		t.Fatal("\nwant =>", want, "\ngot  =>", got)
 	}
@@ -120,7 +121,7 @@ string-slice:
 - b
 - c
 `
-	f, err := NewFromYAMLString(yamlString)
+	f, err := flex.NewFromYAML(yamlString)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -140,12 +141,12 @@ func TestYAMLToYAML(t *testing.T) {
 	var want string
 	var got string
 
-	f, err := NewFromYAMLFile("sample.yaml")
+	f, err := flex.NewFromYAMLFile("sample.yaml")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	got = f.GetYAML("")
+	got = f.ToYAML()
 	want = `kind: TestCase
 spec:
   containers:
@@ -159,7 +160,7 @@ spec:
 `
 	assert.Equal(t, want, got, "")
 
-	got = f.GetYAML(".spec.containers")
+	got = f.Get(".spec.containers").ToYAML()
 	want = `- env:
     - name: DEMO_GREETING
       value: Hello from the environment
@@ -175,18 +176,18 @@ func TestYAMLToJSON(t *testing.T) {
 	var want string
 	var got string
 
-	f, err := NewFromYAMLFile("sample.yaml")
+	f, err := flex.NewFromYAMLFile("sample.yaml")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	got = f.GetJSON("")
+	got = f.ToJSON()
 	want = `{"kind":"TestCase","spec":{"containers":[{"env":[{"name":"DEMO_GREETING","value":"Hello from the environment"},{"name":"DEMO_FAREWELL","value":"Such a sweet sorrow"}],"image":"gcr.io/google-samples/node-hello:1.0","name":"envar-demo-container"}]}}`
 	if want != got {
 		t.Fatal("\nwant =>", want, "\ngot  =>", got)
 	}
 
-	got = f.GetJSON(".spec.containers")
+	got = f.Get(".spec.containers").ToJSON()
 	want = `[{"env":[{"name":"DEMO_GREETING","value":"Hello from the environment"},{"name":"DEMO_FAREWELL","value":"Such a sweet sorrow"}],"image":"gcr.io/google-samples/node-hello:1.0","name":"envar-demo-container"}]`
 	if want != got {
 		t.Fatal("\nwant =>", want, "\ngot  =>", got)
