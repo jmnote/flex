@@ -10,6 +10,8 @@ flexible object in golang
 In Flex, there are a few ways to create a flex.
 The following functions exist:
 
+* `New() *Flex`
+* `NewFromObject(object interface{}) *Flex`
 * `NewFromJSON(jsonString string) (*Flex, error)`
 * `NewFromJSONFile(filepath string) (*Flex, error)`
 * `NewFromJSONBytes(jsonBytes []byte) (*Flex, error)`
