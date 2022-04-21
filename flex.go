@@ -175,6 +175,10 @@ func (f *Flex) GetObject(key string) interface{} {
 	return f.Get(key).Object
 }
 
+func (f *Flex) ToObject() interface{} {
+	return f.Object
+}
+
 func (f *Flex) GetSlice(key string) []interface{} {
 	return f.Get(key).ToSlice()
 }
